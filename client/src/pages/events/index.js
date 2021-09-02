@@ -100,7 +100,7 @@ function Title() {
         </Grid>
 
         <Grid item xs={12}>
-          <DisplayContracts title="Contracts" />
+          <DisplayContracts title="Your Contracts" owner />
         </Grid>
         <Grid item xs={12}>
           <SuggestedEvents />

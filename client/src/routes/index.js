@@ -21,23 +21,6 @@ const Events = async(() => import("../pages/events"));
 const Event = async(() => import("../pages/event"));
 const Wallet = async(() => import("../pages/walletFunctions"));
 
-const dashboardsRoute = {
-  id: "Dashboard",
-  path: "/dashboard",
-  header: "Pages",
-  icon: <Monitor />,
-  containsHome: true,
-  component: Dashboard,
-};
-
-const orderBookRoute = {
-  id: "Order Book",
-  path: "/order",
-  icon: <BookOpen />,
-  containsHome: true,
-  component: Dashboard,
-};
-
 const landing = {
   id: "Landing",
   path: "/",
@@ -101,22 +84,9 @@ const landingRoute = {
 export const presentationLayoutRoutes = [landingRoute];
 
 // Routes using the Dashboard layout
-export const dashboardLayoutRoutes = [
-  dashboardsRoute,
-  landing,
-  walletRoutes,
-  orderBookRoute,
-  infoRoutes,
-];
+export const dashboardLayoutRoutes = [landing, walletRoutes, infoRoutes];
 
 export const noPadDashboardLayoutRoutes = [eventRoutes];
 
 // Routes visible in the sidebar
-export const sidebarRoutes = [
-  dashboardsRoute,
-  landing,
-  eventRoutes,
-  walletRoutes,
-  orderBookRoute,
-  infoRoutes,
-];
+export const sidebarRoutes = [eventRoutes, walletRoutes, infoRoutes];

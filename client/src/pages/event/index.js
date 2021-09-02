@@ -6,8 +6,9 @@ import { Helmet } from "react-helmet-async";
 import Comparison from "./Comparison";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { Card as MuiCard, Box, Grid, CardMedia } from "@material-ui/core";
+import { Box, Grid } from "@material-ui/core";
 import DisplayContracts from "../../components/DisplayContracts";
+import CreateContract from "../../components/CreateContract";
 import SuggestedEvents from "../events/SuggestedEvents";
 
 const StyledImage = styled.img`
@@ -102,11 +103,16 @@ function Event() {
       <Box paddingX="20px">
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <DisplayContracts title="Available Contracts" />
+            <DisplayContracts title="Contracts" />
+          </Grid>
+          <Grid item xs={12}>
+            <CreateContract title="Create Contract" />
           </Grid>
         </Grid>
 
-        <SuggestedEvents />
+        <Box mt={4}>
+          <SuggestedEvents />
+        </Box>
       </Box>
     </Box>
   );

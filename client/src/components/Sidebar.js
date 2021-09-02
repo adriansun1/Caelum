@@ -367,7 +367,8 @@ const Sidebar = ({ classes, staticContext, location, ...rest }) => {
           </Items>
         </List>
       </Scrollbar>
-      <SidebarFooter>
+      {/* TODO use footer bar for something */}
+      {/* <SidebarFooter>
         <Grid container spacing={2}>
           <Grid item>
             <SidebarFooterBadge>
@@ -386,7 +387,7 @@ const Sidebar = ({ classes, staticContext, location, ...rest }) => {
             </SidebarFooterSubText>
           </Grid>
         </Grid>
-      </SidebarFooter>
+      </SidebarFooter> */}
     </Drawer>
   );
 };

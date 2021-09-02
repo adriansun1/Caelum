@@ -32,6 +32,7 @@ import Wallet from "../../components/Wallet";
 
 import { spacing } from "@material-ui/system";
 import DisplayContracts from "../../components/DisplayContracts";
+import CreateContract from "../../components/CreateContract";
 
 const Divider = styled(MuiDivider)(spacing);
 
@@ -169,21 +170,20 @@ function WalletFunctions() {
         <Grid item xs={12}>
           <Card>
             <CardContent>
-              <Typography variant="h3" my={4}>
-                Create and Take Bets
+              <Typography variant="h4" my={4}>
+                Take Bets
               </Typography>
               <DisplayContracts />
-              <Box component="span" mx={3}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() =>
-                    createBet(connectedWallet, "Lakers", 200, 300000000, "uusd")
-                  }
-                >
-                  Create Contract
-                </Button>
-              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Typography variant="h4" my={4}>
+                Create Bets
+              </Typography>
+              <CreateContract />
             </CardContent>
           </Card>
         </Grid>
