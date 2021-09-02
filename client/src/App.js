@@ -25,7 +25,7 @@ function App() {
   const theme = useSelector((state) => state.themeReducer);
 
   return (
-    <React.Fragment>
+    <>
       <HelmetProvider>
         <Helmet
           titleTemplate="%s | Caelum Protocol"
@@ -41,7 +41,7 @@ function App() {
           </MuiPickersUtilsProvider>
         </StylesProvider>
       </HelmetProvider>
-    </React.Fragment>
+    </>
   );
 }
 
