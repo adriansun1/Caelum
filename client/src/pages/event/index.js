@@ -24,12 +24,12 @@ const data = {
   description: "Heavyweight Interim Title Bout",
   video: "https://www.youtube.com/embed/VbYU54MYfF0",
   team1: {
-    image: "/static/img/tourney/Lewis.png",
+    image: "/static/img/tourney/lewis.png",
     firstName: "Derrick",
     lastName: "Lewis",
   },
   team2: {
-    image: "/static/img/tourney/Gane.png",
+    image: "/static/img/tourney/gane.png",
     firstName: "Cyril",
     lastName: "Gane",
   },
