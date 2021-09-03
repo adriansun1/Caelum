@@ -13,7 +13,10 @@ import { rgba } from "polished";
 
 import { spacing } from "@material-ui/system";
 
-const Card = styled(MuiCard)(spacing);
+const SpacedCard = styled(MuiCard)(spacing);
+const Card = styled(SpacedCard)`
+  height: 100%;
+`;
 
 const Typography = styled(MuiTypography)(spacing);
 
@@ -64,7 +67,7 @@ const Stats = ({
           </Percentage>
         )}
         {buttonText && onClick && (
-          <Box mt="16px">
+          <Box mt={2}>
             <Button onClick={onClick} variant="contained" color="primary">
               {buttonText}
             </Button>

@@ -3,11 +3,15 @@ import styled from "styled-components/macro";
 
 import { useWallet, WalletStatus } from "@terra-money/wallet-provider";
 
-import { Button as MuiButton } from "@material-ui/core";
+import {
+  Button as MuiButton,
+  Typography as MuiTypography,
+} from "@material-ui/core";
 import { spacing } from "@material-ui/system";
 import { AccountBalanceWallet } from "@material-ui/icons";
 
 const Button = styled(MuiButton)(spacing);
+const Typography = styled(MuiTypography)(spacing);
 const Icon = styled(AccountBalanceWallet)`
   margin-right: 4px;
 `;
@@ -32,6 +36,10 @@ function Wallet() {
     disconnect();
   }
 
+  function shortenAddress(address) {
+    return address.slice(0, 8) + "...." + address.slice(-6);
+  }
+
   return (
     <>
       {status === WalletStatus.WALLET_NOT_CONNECTED || wallets.length < 1 ? (
@@ -41,7 +49,10 @@ function Wallet() {
         </Button>
       ) : (
         <Button variant="outlined" color="primary" onClick={handleDisconnect}>
-          <div>wallet connected {wallets[0].terraAddress}</div>
+          Connected to
+          <Typography noWrap ml={1}>
+            {shortenAddress(wallets[0].terraAddress)}
+          </Typography>
         </Button>
       )}
     </>

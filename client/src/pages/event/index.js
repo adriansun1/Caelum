@@ -10,6 +10,7 @@ import { Box, Grid } from "@material-ui/core";
 import DisplayContracts from "../../components/DisplayContracts";
 import CreateContract from "../../components/CreateContract";
 import SuggestedEvents from "../events/SuggestedEvents";
+import { contractAddress } from "../../utils/contracts";
 
 const StyledImage = styled.img`
   position: absolute;
@@ -103,7 +104,7 @@ function Event() {
       <Box paddingX="20px">
         <Grid container spacing={4}>
           <Grid item xs={12}>
-            <DisplayContracts title="Contracts" />
+            <DisplayContracts title="Contracts" contract={contractAddress} />
           </Grid>
           <Grid item xs={12}>
             <CreateContract title="Create Contract" />

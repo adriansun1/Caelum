@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
-import { getAllBets, takeBet } from "../utils/contracts";
+import { getAllBets, getMatchup, takeBet } from "../utils/contracts";
 
 import {
   Box,
@@ -29,24 +29,21 @@ const Typography = styled(SpacedTypography)`
 `;
 const Divider = styled(MuiDivider)(spacing);
 
-export default function DisplayContracts({ title, owner }) {
+export default function DisplayContracts({ title, contract }) {
   const [allBets, setAllBets] = useState([]);
+  const [teams, setTeams] = useState([]);
   const connectedWallet = useConnectedWallet();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (connectedWallet) {
-        let allBets = await getAllBets();
-        allBets = allBets.filter(({ host }) => {
-          const isOwnedByWallet = host === connectedWallet.walletAddress;
-          return owner ? isOwnedByWallet : !isOwnedByWallet;
-        });
+      const { hometeam, awayteam } = await getMatchup(contract);
+      setTeams([hometeam, awayteam]);
 
-        setAllBets(allBets);
-      }
+      let allBets = await getAllBets();
+      setAllBets(allBets);
     };
     fetchData();
-  }, [owner, connectedWallet]);
+  }, [contract]);
 
   return (
     <Box my={4}>
@@ -61,32 +58,39 @@ export default function DisplayContracts({ title, owner }) {
           <Table>
             <TableHead>
               <TableRow>
-                {!owner && <TableCell>Bet Creator</TableCell>}
+                <TableCell>Bet Creator</TableCell>
+                <TableCell align="center">Match</TableCell>
                 <TableCell align="center">Team</TableCell>
                 <TableCell align="center">Odds</TableCell>
-                <TableCell align="center">Offered Amount</TableCell>
-                <TableCell align="center">Match Amount</TableCell>
+                <TableCell align="center">Risk</TableCell>
+                <TableCell align="center">To Win</TableCell>
                 <TableCell align="center">Available?</TableCell>
               </TableRow>
             </TableHead>
-            {allBets.length === 0 && (
-              <TableCell colSpan={6}>
-                <Typography variant="h4" align="center" padding={8}>
-                  No bets placed
-                </Typography>
-              </TableCell>
-            )}
             <TableBody>
+              {allBets.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    <Typography variant="h4" align="center" padding={8}>
+                      No bets placed
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
               {allBets.map(
                 ({ host, team, odds, amount, match_amount, matched_bet }) => {
                   return (
                     <TableRow key={`${host}_${amount.amount}`}>
-                      {!owner && <TableCell>{host}</TableCell>}
+                      <TableCell>{host}</TableCell>
                       <TableCell align="center" component="th" scope="row">
                         <Grid container direction="column">
-                          <Grid item>{team}</Grid>
-                          <Grid item>{team}</Grid>
+                          <Grid item>{teams[0]}</Grid>
+                          <Divider />
+                          <Grid item>{teams[1]}</Grid>
                         </Grid>
+                      </TableCell>
+                      <TableCell align="center">
+                        {teams[team === "Home" ? 0 : 1]}
                       </TableCell>
                       <TableCell align="center">{odds}</TableCell>
                       <TableCell align="center">
@@ -97,23 +101,27 @@ export default function DisplayContracts({ title, owner }) {
                       </TableCell>
                       <TableCell align="center">
                         {matched_bet && <Chip label="N/A" />}
-                        {!matched_bet && owner && (
-                          <Chip label="Waiting for match" />
-                        )}
-                        {!matched_bet && !owner && (
-                          <Chip
-                            label="Bet!"
-                            color="primary"
-                            onClick={() =>
-                              takeBet(
-                                connectedWallet,
-                                host,
-                                match_amount.amount,
-                                match_amount.denom
-                              )
-                            }
-                          />
-                        )}
+                        {!matched_bet &&
+                          connectedWallet &&
+                          host === connectedWallet.walletAddress && (
+                            <Chip label="Waiting for match" />
+                          )}
+                        {!matched_bet &&
+                          connectedWallet &&
+                          !(host === connectedWallet.walletAddress) && (
+                            <Chip
+                              label="Bet!"
+                              color="primary"
+                              onClick={() =>
+                                takeBet(
+                                  connectedWallet,
+                                  host,
+                                  match_amount.amount,
+                                  match_amount.denom
+                                )
+                              }
+                            />
+                          )}
                       </TableCell>
                     </TableRow>
                   );

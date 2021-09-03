@@ -26,7 +26,7 @@ import {
   UserDenied,
 } from "@terra-money/wallet-provider";
 import { MsgSend, StdFee } from "@terra-money/terra.js";
-import { createBet } from "../../utils/contracts";
+import { contractAddress, proposeBet } from "../../utils/contracts";
 
 import Wallet from "../../components/Wallet";
 
@@ -173,7 +173,7 @@ function WalletFunctions() {
               <Typography variant="h4" my={4}>
                 Take Bets
               </Typography>
-              <DisplayContracts />
+              <DisplayContracts contract={contractAddress} />
             </CardContent>
           </Card>
         </Grid>

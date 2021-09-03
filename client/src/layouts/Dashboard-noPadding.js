@@ -3,7 +3,6 @@ import styled, { createGlobalStyle } from "styled-components/macro";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/AppBar";
 import Footer from "../components/Footer";
-import Settings from "../components/Settings";
 
 import { spacing } from "@material-ui/system";
 import {
@@ -105,7 +104,6 @@ const Dashboard = ({ children, routes, width }) => {
         </MainContent>
         <Footer />
       </AppContent>
-      <Settings />
     </Root>
   );
 };
