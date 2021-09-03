@@ -100,7 +100,9 @@ export default function DisplayContracts({ title, contract }) {
                         {convertUusdToUst(match_amount.amount)} UST
                       </TableCell>
                       <TableCell align="center">
-                        {matcher && <Chip label="Bet taken" />}
+                        {matcher && connectedWallet && (
+                          <Chip label="Bet taken" />
+                        )}
                         {!matcher &&
                           connectedWallet &&
                           host === connectedWallet.walletAddress && (
