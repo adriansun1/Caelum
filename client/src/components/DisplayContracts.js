@@ -78,7 +78,7 @@ export default function DisplayContracts({ title, contract }) {
                 </TableRow>
               )}
               {allBets.map(
-                ({ host, team, odds, amount, match_amount, matched_bet }) => {
+                ({ host, team, odds, amount, match_amount, matcher }) => {
                   return (
                     <TableRow key={`${host}_${amount.amount}`}>
                       <TableCell>{host}</TableCell>
@@ -100,13 +100,13 @@ export default function DisplayContracts({ title, contract }) {
                         {convertUusdToUst(match_amount.amount)} UST
                       </TableCell>
                       <TableCell align="center">
-                        {matched_bet && <Chip label="N/A" />}
-                        {!matched_bet &&
+                        {matcher && <Chip label="Bet taken" />}
+                        {!matcher &&
                           connectedWallet &&
                           host === connectedWallet.walletAddress && (
                             <Chip label="Waiting for match" />
                           )}
-                        {!matched_bet &&
+                        {!matcher &&
                           connectedWallet &&
                           !(host === connectedWallet.walletAddress) && (
                             <Chip

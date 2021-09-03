@@ -57,10 +57,12 @@ export async function getAllBets() {
     contractAddress,
     { get_all_bets: {} } // query msg
   );
+  console.log(result.bets);
   return result.bets;
 }
 
 export async function takeBet(connectedWallet, host, amount, denom) {
+  console.log(host, amount, denom);
   if (!connectedWallet) {
     return alert("Please connect your wallet first");
   }
