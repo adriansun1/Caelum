@@ -5,7 +5,6 @@ import { NavLink, withRouter } from "react-router-dom";
 import { darken } from "polished";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "../vendor/perfect-scrollbar.css";
-import { Hexagon } from "react-feather";
 
 import { spacing } from "@material-ui/system";
 
@@ -311,7 +310,8 @@ const Sidebar = ({ classes, staticContext, location, ...rest }) => {
   return (
     <Drawer variant="permanent" {...rest}>
       <Brand component={NavLink} to="/" button>
-        <Hexagon /> <Box ml={2}>Caelum protocol</Box>
+        <img src="/static/img/tourney/logo.svg" alt="logo" width="35px" />{" "}
+        <Box ml={2}>Caelum Protocol</Box>
       </Brand>
       <Scrollbar>
         <List disablePadding>
