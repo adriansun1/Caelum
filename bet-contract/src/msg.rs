@@ -17,7 +17,8 @@ pub struct InstantiateMsg {
 pub enum ExecuteMsg {
     ProposeBet { team: String, odds: i16 },
     TakeBet { host: String },
-    SettleUp { homeScore: i16, awayScore: i16 },
+    ScoreBets { homeScore: i16, awayScore: i16 },
+    Claim { host: String}
 }
 
 // QUERY MSG

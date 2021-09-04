@@ -16,6 +16,7 @@ import Stats from "./Stats";
 import PopularSports from "./PopularSports";
 import FeaturedCarousel from "./Featured";
 import SuggestedEvents from "./SuggestedEvents";
+import ClaimRewards from "./ClaimRewards";
 import { contractAddress } from "../../utils/contracts";
 
 import { green } from "@material-ui/core/colors";
@@ -65,16 +66,11 @@ function Title() {
           />
         </Grid>
         <Grid item xs={6}>
-          <Stats
-            title="Total Claimable Rewards"
-            amount={`${ust.toLocaleString()} UST`}
-            buttonText="Claim Rewards"
-            onClick={() => console.log("reward claimed")}
-          />
+          <ClaimRewards />
         </Grid>
 
         <Grid item xs={12}>
-          <DisplayContracts title="Your Contracts" contract={contractAddress} />
+          <DisplayContracts title="Contracts" contract={contractAddress} />
         </Grid>
         <Grid item xs={12}>
           <SuggestedEvents />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
-import { getAllBets, getMatchup, takeBet } from "../utils/contracts";
+import { getAllBets, getMatchup, takeBet, claimBet } from "../utils/contracts";
 
 import {
   Box,
@@ -20,14 +20,20 @@ import {
 import { convertUusdToUst } from "../utils/conversions";
 import { spacing } from "@material-ui/system";
 import { useConnectedWallet } from "@terra-money/wallet-provider";
+import { mapTeam } from "../utils/mapTeam";
+import { green } from "@material-ui/core/colors";
 
-const Chip = styled(MuiChip)(spacing);
+const SpacedChip = styled(MuiChip)(spacing);
 const Card = styled(MuiCard)(spacing);
 const SpacedTypography = styled(MuiTypography)(spacing);
 const Typography = styled(SpacedTypography)`
   width: 100%;
 `;
 const Divider = styled(MuiDivider)(spacing);
+const Chip = styled(SpacedChip)`
+  background-color: ${(props) => props.rgbcolor};
+  color: ${(props) => props.theme.palette.common.white};
+`;
 
 export default function DisplayContracts({ title, contract }) {
   const [allBets, setAllBets] = useState([]);
@@ -41,9 +47,17 @@ export default function DisplayContracts({ title, contract }) {
 
       let allBets = await getAllBets();
       setAllBets(allBets);
+      console.log("allbets", allBets);
     };
     fetchData();
   }, [contract]);
+
+  function getWinnerAddress(winner, matcher, host) {
+    if (winner === "MatcherWins") {
+      return matcher;
+    }
+    return host;
+  }
 
   return (
     <Box my={4}>
@@ -70,7 +84,7 @@ export default function DisplayContracts({ title, contract }) {
             <TableBody>
               {allBets.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6}>
+                  <TableCell colSpan={10}>
                     <Typography variant="h4" align="center" padding={8}>
                       No bets placed
                     </Typography>
@@ -78,19 +92,27 @@ export default function DisplayContracts({ title, contract }) {
                 </TableRow>
               )}
               {allBets.map(
-                ({ host, team, odds, amount, match_amount, matcher }) => {
+                ({
+                  host,
+                  team,
+                  odds,
+                  amount,
+                  match_amount,
+                  matcher,
+                  winner,
+                }) => {
                   return (
                     <TableRow key={`${host}_${amount.amount}`}>
                       <TableCell>{host}</TableCell>
                       <TableCell align="center" component="th" scope="row">
                         <Grid container direction="column">
-                          <Grid item>{teams[0]}</Grid>
+                          <Grid item>{mapTeam(teams[0])}</Grid>
                           <Divider />
-                          <Grid item>{teams[1]}</Grid>
+                          <Grid item>{mapTeam(teams[1])}</Grid>
                         </Grid>
                       </TableCell>
                       <TableCell align="center">
-                        {teams[team === "Home" ? 0 : 1]}
+                        {mapTeam(teams[team === "Home" ? 0 : 1])}
                       </TableCell>
                       <TableCell align="center">{odds}</TableCell>
                       <TableCell align="center">
@@ -100,13 +122,26 @@ export default function DisplayContracts({ title, contract }) {
                         {convertUusdToUst(match_amount.amount)} UST
                       </TableCell>
                       <TableCell align="center">
-                        {matcher && connectedWallet && (
-                          <Chip label="Bet taken" />
-                        )}
+                        {matcher &&
+                          connectedWallet &&
+                          getWinnerAddress(winner, matcher, host) !==
+                            connectedWallet.walletAddress && (
+                            <Chip label="Bet taken" />
+                          )}
                         {!matcher &&
                           connectedWallet &&
                           host === connectedWallet.walletAddress && (
                             <Chip label="Waiting for match" />
+                          )}
+                        {winner &&
+                          connectedWallet &&
+                          getWinnerAddress(winner, matcher, host) ===
+                            connectedWallet.walletAddress && (
+                            <Chip
+                              label="Collect!"
+                              rgbcolor={green[400]}
+                              onClick={() => claimBet(connectedWallet, host)}
+                            />
                           )}
                         {!matcher &&
                           connectedWallet &&

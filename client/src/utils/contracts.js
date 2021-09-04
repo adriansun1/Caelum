@@ -3,6 +3,7 @@ import {
   MsgExecuteContract,
   MsgSend,
   StdFee,
+  Coin,
 } from "@terra-money/terra.js";
 import {
   CreateTxFailed,
@@ -12,7 +13,7 @@ import {
   UserDenied,
 } from "@terra-money/wallet-provider";
 
-export const contractAddress = "terra1mdaug0654jwpsfmpwrshyf4xs2x3avf9rnr8zv";
+export const contractAddress = "terra1z330fwm5wayld9f6nsrp3tvvwneaktnerrfmf7";
 
 function handleErrorMessage(error) {
   if (error instanceof UserDenied) {
@@ -59,6 +60,36 @@ export async function getAllBets() {
   );
   console.log(result.bets);
   return result.bets;
+}
+
+export async function claimBet(connectedWallet, host) {
+  if (!connectedWallet) {
+    return alert("Please connect your wallet first");
+  }
+
+  if (connectedWallet.network.chainID.startsWith("columbus")) {
+    alert(`Please only execute this example on Testnet`);
+    return;
+  }
+
+  console.log("what the fuck");
+  try {
+    // docs suck, no idea how to automatically estimate fee
+    const result = await connectedWallet.post({
+      fee: new StdFee(1000000, "300000uusd"),
+      msgs: [
+        new MsgExecuteContract(connectedWallet.walletAddress, contractAddress, {
+          claim: {
+            host,
+          },
+        }),
+      ],
+    });
+
+    return result;
+  } catch (error) {
+    return handleErrorMessage(error);
+  }
 }
 
 export async function takeBet(connectedWallet, host, amount, denom) {

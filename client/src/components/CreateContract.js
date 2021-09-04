@@ -4,7 +4,6 @@ import styled from "styled-components/macro";
 import {
   Button as MuiButton,
   Card,
-  CardContent,
   Box,
   Grid,
   Typography,
@@ -16,7 +15,6 @@ import {
   TableHead,
   Table,
   Paper,
-  FormHelperText,
   Select,
   InputLabel,
   MenuItem,
@@ -24,8 +22,9 @@ import {
 } from "@material-ui/core";
 import { spacing } from "@material-ui/system";
 import { useConnectedWallet } from "@terra-money/wallet-provider";
-import { getMatchup, proposeBet } from "../utils/contracts";
-import { convertUstToUusd, convertUusdToUst } from "../utils/conversions";
+import { contractAddress, getMatchup, proposeBet } from "../utils/contracts";
+import { convertUstToUusd } from "../utils/conversions";
+import { mapTeam } from "../utils/mapTeam";
 
 const FormControlSpacing = styled(MuiFormControl)(spacing);
 const FormControl = styled(FormControlSpacing)`
@@ -52,7 +51,7 @@ function CreateContract({ title }) {
 
   useEffect(() => {
     const contracts = [
-      "terra1mdaug0654jwpsfmpwrshyf4xs2x3avf9rnr8zv",
+      contractAddress,
       "terra18l8dhlvlehcz9lgzy3pe0qmla0aht6hpjpdsex",
       "terra1uz2l4fazzj2vvkwlw5dgn79vupl7y57tup6ydu",
     ];
@@ -93,92 +92,96 @@ function CreateContract({ title }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {matchups.map(({ hometeam, awayteam }) => (
-                <TableRow key={hometeam}>
-                  <TableCell align="center" component="th" scope="row">
-                    <Grid container direction="column">
-                      <Grid item>{hometeam}</Grid>
-                      <Divider />
-                      <Grid item>{awayteam}</Grid>
-                    </Grid>
-                  </TableCell>
-                  <TableCell>
-                    <FormControl>
-                      <InputLabel id="winner-label">Winning team</InputLabel>
-                      <Select
-                        labelId="winner-label"
-                        id="winner"
-                        value={form[hometeam]?.winner || ""}
+              {matchups.map(({ hometeam, awayteam }) => {
+                const home = mapTeam(hometeam);
+                const away = mapTeam(awayteam);
+                return (
+                  <TableRow key={home}>
+                    <TableCell align="center" component="th" scope="row">
+                      <Grid container direction="column">
+                        <Grid item>{home}</Grid>
+                        <Divider />
+                        <Grid item>{away}</Grid>
+                      </Grid>
+                    </TableCell>
+                    <TableCell>
+                      <FormControl>
+                        <InputLabel id="winner-label">Winning team</InputLabel>
+                        <Select
+                          labelId="winner-label"
+                          id="winner"
+                          value={form[home]?.winner || ""}
+                          onChange={(event) =>
+                            handleChange(home, "winner", event.target.value)
+                          }
+                          label="winner"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value={"home"}>{home}</MenuItem>
+                          <MenuItem value={"away"}>{away}</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                    <TableCell>
+                      <FormControl>
+                        <InputLabel id="odds-amount-label">Odds</InputLabel>
+                        <Select
+                          labelId="odds-amount-label"
+                          id="odds-amount"
+                          value={form[home]?.odds || ""}
+                          onChange={(event) =>
+                            handleChange(home, "odds", event.target.value)
+                          }
+                          label="odds"
+                        >
+                          <MenuItem value="">
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value={-120}>-120</MenuItem>
+                          <MenuItem value={-110}>-110</MenuItem>
+                          <MenuItem value={-100}>-100</MenuItem>
+                          <MenuItem value={105}>105</MenuItem>
+                          <MenuItem value={115}>115</MenuItem>
+                          <MenuItem value={125}>125</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        type="number"
+                        fullWidth
+                        label="Bet UST"
+                        id="bet-amount"
+                        value={form[home]?.bet || ""}
                         onChange={(event) =>
-                          handleChange(hometeam, "winner", event.target.value)
+                          handleChange(home, "bet", event.target.value)
                         }
-                        label="winner"
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Button
+                        mt={1}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          const { winner, odds, bet } = form[home];
+                          proposeBet(
+                            connectedWallet,
+                            winner,
+                            odds,
+                            convertUstToUusd(bet),
+                            "uusd"
+                          );
+                        }}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"home"}>{hometeam}</MenuItem>
-                        <MenuItem value={"away"}>{awayteam}</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell>
-                    <FormControl>
-                      <InputLabel id="odds-amount-label">Odds</InputLabel>
-                      <Select
-                        labelId="odds-amount-label"
-                        id="odds-amount"
-                        value={form[hometeam]?.odds || ""}
-                        onChange={(event) =>
-                          handleChange(hometeam, "odds", event.target.value)
-                        }
-                        label="odds"
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={-120}>-120</MenuItem>
-                        <MenuItem value={-110}>-110</MenuItem>
-                        <MenuItem value={-100}>-100</MenuItem>
-                        <MenuItem value={105}>105</MenuItem>
-                        <MenuItem value={115}>115</MenuItem>
-                        <MenuItem value={125}>125</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      type="number"
-                      fullWidth
-                      label="Bet UST"
-                      id="bet-amount"
-                      value={form[hometeam]?.bet || ""}
-                      onChange={(event) =>
-                        handleChange(hometeam, "bet", event.target.value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell align="center">
-                    <Button
-                      mt={1}
-                      variant="contained"
-                      color="primary"
-                      onClick={() => {
-                        const { winner, odds, bet } = form[hometeam];
-                        proposeBet(
-                          connectedWallet,
-                          winner,
-                          odds,
-                          convertUstToUusd(bet),
-                          "uusd"
-                        );
-                      }}
-                    >
-                      Create
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        Create
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Paper>

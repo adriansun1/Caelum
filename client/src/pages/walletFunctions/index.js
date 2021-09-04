@@ -26,7 +26,7 @@ import {
   UserDenied,
 } from "@terra-money/wallet-provider";
 import { MsgSend, StdFee } from "@terra-money/terra.js";
-import { contractAddress, proposeBet } from "../../utils/contracts";
+import { contractAddress } from "../../utils/contracts";
 
 import Wallet from "../../components/Wallet";
 

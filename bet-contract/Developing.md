@@ -35,31 +35,45 @@ sudo terrad keys add oracle
 # oracle
 # terra1fd0kaldhtlxpq624znwzqst98247q7wxuw6h29
 
+# bombay oracle
+#terra1vl2kzr367h5hseva7pp9m4z0l9eztsawp34tvt
+
 # upload to localterra (from repo)
 sudo terrad tx wasm store ./artifacts/sc101.wasm --from test1 --chain-id=localterra --gas=auto --fees=100000uluna --broadcast-mode=block
 
-# Note CODE_ID from output (4)
+# Note CODE_ID from output (5)
 
 # verify upload
-terrad query wasm code 4
+terrad query wasm code 13
 
 # instantiate contract
-sudo terrad tx wasm instantiate CODE_ID '{"team1":"Saints","team2":"Falcons","oracle":"terra1fd0kaldhtlxpq624znwzqst98247q7wxuw6h29"}' --from test1 --chain-id=localterra --fees=10000uluna --gas=auto --broadcast-mode=block
+sudo terrad tx wasm instantiate 13 '{"gamekey":201203201, "hometeam":"TB", "awayteam":"DAL", "datetime":"01-01-2021", "oracle":"terra1fd0kaldhtlxpq624znwzqst98247q7wxuw6h29"}' --from test1 --chain-id=localterra --fees=10000uluna --gas=auto --broadcast-mode=block
 
 # Note CONTRACT_ADDRESS from output
-# terra1sndgzq62wp23mv20ndr4sxg6k8xcsudsy87uph
+# terra1qk3p24xym9u6taspptcwac0wzjqwz7zptd96zv
 
 # verify instantiation
-terrad query wasm contract terra1sndgzq62wp23mv20ndr4sxg6k8xcsudsy87uph
+terrad query wasm contract terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8
 
 # "test1" proposes bet for 300uluna
-sudo terrad tx wasm execute terra1sndgzq62wp23mv20ndr4sxg6k8xcsudsy87uph '{"propose_bet":{"team":"Saints","odds":-150}}' 300uluna --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
+sudo terrad tx wasm execute terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8 '{"propose_bet":{"team":"home","odds":-150}}' 300uluna --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
 
 # query bets
-terrad query wasm contract-store terra1sndgzq62wp23mv20ndr4sxg6k8xcsudsy87uph '{"get_all_bets":{}}'
+terrad query wasm contract-store terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8
+ '{"get_all_bets":{}}'
 
 # "test2" matches "test1" bet with 200uluna
-sudo terrad tx wasm execute terra1sndgzq62wp23mv20ndr4sxg6k8xcsudsy87uph '{"take_bet":{"host":"terra1dcegyrekltswvyy0xy69ydgxn9x8x32zdtapd8"}}' 200uluna --from test2 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
+sudo terrad tx wasm execute terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8 '{"take_bet":{"host":"terra1dcegyrekltswvyy0xy69ydgxn9x8x32zdtapd8"}}' 200uluna --from test2 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
+
+# query contract balance
+sudo terrad query bank balances terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8
+
+
+# admin override to settle up
+sudo terrad tx wasm execute terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8 '{"score_bets":{"homeScore":21,"awayScore":7}}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
+
+# user claims a setted bet
+sudo terrad tx wasm execute terra1u3zhxxmqq9fkuxmuzkzlzjgzerejqpk64xpmx8 '{"claim":{"host":"terra1dcegyrekltswvyy0xy69ydgxn9x8x32zdtapd8"}}' --from test1 --chain-id=localterra --fees=100000uluna --gas=auto --broadcast-mode=block
 ```
 
 ## Prerequisites

@@ -22,7 +22,10 @@ pub enum ContractError {
     Noadmin {},
 
     #[error("A bet may only be matched by one party")]
-    MultipleMatches {}
+    MultipleMatches {},
+
+    #[error("User has no claim on this bet")]
+    Noclaim {}
     // Add any other custom errors you like here.
     // Look at https://docs.rs/thiserror/1.0.21/thiserror/ for details.
 }

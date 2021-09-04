@@ -14,7 +14,15 @@ pub enum Team {
 pub enum GameResult {
     HomeWins,
     AwayWins,
-    Tie
+    Tie,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum BetResult {
+    HostWins,
+    MatcherWins,
+    Tie,
+    Unmatched
 }
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct State {
@@ -34,6 +42,7 @@ pub struct Data {
     pub amount: Coin,
     pub match_amount: Coin,
     pub matcher: Option<Addr>,
+    pub winner: Option<BetResult>
 }
 
 pub const STATE: Item<State> = Item::new("state");
