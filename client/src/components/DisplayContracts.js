@@ -3,6 +3,7 @@ import styled from "styled-components/macro";
 import { getAllBets, getMatchup, takeBet, claimBet } from "../utils/contracts";
 
 import {
+  IconButton,
   Box,
   Card as MuiCard,
   Chip as MuiChip,
@@ -17,6 +18,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 
+import { Refresh } from "@material-ui/icons";
 import { convertUusdToUst } from "../utils/conversions";
 import { spacing } from "@material-ui/system";
 import { useConnectedWallet } from "@terra-money/wallet-provider";
@@ -52,6 +54,15 @@ export default function DisplayContracts({ title, contract }) {
     fetchData();
   }, [contract]);
 
+  async function refreshBets() {
+    const { hometeam, awayteam } = await getMatchup(contract);
+    setTeams([hometeam, awayteam]);
+
+    let allBets = await getAllBets();
+    setAllBets(allBets);
+    console.log("allbets", allBets);
+  }
+
   function getWinnerAddress(winner, matcher, host) {
     if (winner === "MatcherWins") {
       return matcher;
@@ -61,9 +72,15 @@ export default function DisplayContracts({ title, contract }) {
 
   return (
     <Box my={4}>
-      <Typography variant="h4" gutterBottom display="inline">
-        {title}
-      </Typography>
+      <Box justifyContent="space-between" display="flex" alignItems="center">
+        <Typography variant="h4" gutterBottom display="inline">
+          {title}
+        </Typography>
+
+        <IconButton color="inherit" aria-label="refresh" onClick={refreshBets}>
+          <Refresh />
+        </IconButton>
+      </Box>
 
       <Divider my={2} />
 
