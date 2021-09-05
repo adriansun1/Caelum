@@ -269,6 +269,10 @@ const SidebarLink = ({ name, to, badge }) => {
   );
 };
 
+const StyledA = styled.a`
+  text-decoration: none;
+`;
+
 const Sidebar = ({ classes, staticContext, location, ...rest }) => {
   const initOpenRoutes = () => {
     /* Open collapse element that matches current url */
@@ -338,15 +342,23 @@ const Sidebar = ({ classes, staticContext, location, ...rest }) => {
                       timeout="auto"
                       unmountOnExit
                     >
-                      {category.children.map((route, index) => (
-                        <SidebarLink
-                          key={index}
-                          name={route.name}
-                          to={route.path}
-                          icon={route.icon}
-                          badge={route.badge}
-                        />
-                      ))}
+                      {category.children.map((route, index) => {
+                        return route.isExternal ? (
+                          <StyledA href={route.path} target="_blank">
+                            <Link>
+                              <LinkText>{route.name}</LinkText>
+                            </Link>
+                          </StyledA>
+                        ) : (
+                          <SidebarLink
+                            key={index}
+                            name={route.name}
+                            to={route.path}
+                            icon={route.icon}
+                            badge={route.badge}
+                          />
+                        );
+                      })}
                     </Collapse>
                   </React.Fragment>
                 ) : category.icon ? (

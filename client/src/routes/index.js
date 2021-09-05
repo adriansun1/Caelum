@@ -51,14 +51,14 @@ const infoRoutes = {
   containsHome: true,
   children: [
     {
-      path: "/info/docs",
-      name: "Documentation",
-      component: Dashboard,
+      path: "/static/caelum.pdf",
+      name: "Whitepaper",
+      isExternal: true,
     },
     {
-      path: "/info/github",
+      path: "https://github.com/neukly/Caelum",
+      isExternal: true,
       name: "Github",
-      component: Dashboard,
     },
   ],
   component: null,
