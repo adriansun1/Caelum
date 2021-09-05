@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/macro";
-import { getAllBets, getMatchup, takeBet, claimBet } from "../utils/contracts";
+import {
+  getAllBets,
+  getMatchup,
+  takeBet,
+  claimBet,
+  getBetsByOwner,
+} from "../utils/contracts";
 
 import {
   IconButton,
@@ -37,7 +43,7 @@ const Chip = styled(SpacedChip)`
   color: ${(props) => props.theme.palette.common.white};
 `;
 
-export default function DisplayContracts({ title, contract }) {
+export default function DisplayContracts({ title, contract, owner }) {
   const [allBets, setAllBets] = useState([]);
   const [teams, setTeams] = useState([]);
   const connectedWallet = useConnectedWallet();
@@ -47,18 +53,36 @@ export default function DisplayContracts({ title, contract }) {
       const { hometeam, awayteam } = await getMatchup(contract);
       setTeams([hometeam, awayteam]);
 
-      let allBets = await getAllBets();
+      let allBets;
+      if (owner) {
+        if (connectedWallet) {
+          allBets = await getBetsByOwner(connectedWallet?.walletAddress);
+        } else {
+          return;
+        }
+      } else {
+        allBets = await getAllBets();
+      }
       setAllBets(allBets);
       console.log("allbets", allBets);
     };
     fetchData();
-  }, [contract]);
+  }, [contract, connectedWallet, owner]);
 
   async function refreshBets() {
     const { hometeam, awayteam } = await getMatchup(contract);
     setTeams([hometeam, awayteam]);
 
-    let allBets = await getAllBets();
+    let allBets;
+    if (owner) {
+      if (connectedWallet) {
+        allBets = await getBetsByOwner(connectedWallet?.walletAddress);
+      } else {
+        return;
+      }
+    } else {
+      allBets = await getAllBets();
+    }
     setAllBets(allBets);
     console.log("allbets", allBets);
   }

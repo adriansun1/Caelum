@@ -13,7 +13,8 @@ import {
   UserDenied,
 } from "@terra-money/wallet-provider";
 
-export const contractAddress = "terra1z330fwm5wayld9f6nsrp3tvvwneaktnerrfmf7";
+// export const contractAddress = "terra1z330fwm5wayld9f6nsrp3tvvwneaktnerrfmf7";
+export const contractAddress = "terra18ajeu3k3ec5j4hzc4ysa53rxn0d9jhnevl58xn";
 
 function handleErrorMessage(error) {
   if (error instanceof UserDenied) {
@@ -57,6 +58,20 @@ export async function getAllBets() {
   const result = await terra.wasm.contractQuery(
     contractAddress,
     { get_all_bets: {} } // query msg
+  );
+  console.log(result.bets);
+  return result.bets;
+}
+
+export async function getBetsByOwner(address) {
+  const terra = new LCDClient({
+    chainID: "bombay-10",
+    URL: "https://bombay-lcd.terra.dev",
+  });
+
+  const result = await terra.wasm.contractQuery(
+    contractAddress,
+    { get_bet_by_host: {} } // query msg
   );
   console.log(result.bets);
   return result.bets;
