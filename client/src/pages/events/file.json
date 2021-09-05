@@ -1,7 +1,16 @@
-{
-"gamekey": 1234,
-"datetime": "2021-09-03T03:54:39.614Z",
-"oracle": "terra1t9d5uxkrkzznyjt4n2ms574674w68qtas5gfuj",
-"hometeam": "Lewis",
-"awayteam": "Gane"
-}
+[
+  {
+    "gamekey": 1234,
+    "datetime": "2021-09-03T03:54:39.614Z",
+    "oracle": "terra1t9d5uxkrkzznyjt4n2ms574674w68qtas5gfuj",
+    "hometeam": "Lewis",
+    "awayteam": "Gane"
+  },
+
+  {
+    "score_bets": {
+      "homeScore": 1,
+      "awayScore": 0
+    }
+  }
+]

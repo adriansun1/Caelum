@@ -14,7 +14,7 @@ import {
 } from "@terra-money/wallet-provider";
 
 // export const contractAddress = "terra1z330fwm5wayld9f6nsrp3tvvwneaktnerrfmf7";
-export const contractAddress = "terra18ajeu3k3ec5j4hzc4ysa53rxn0d9jhnevl58xn";
+export const contractAddress = "terra1rku8nd62ya87gw9lr2x2lmxgvaw0wwu3qqudkr";
 
 function handleErrorMessage(error) {
   if (error instanceof UserDenied) {
@@ -87,7 +87,6 @@ export async function claimBet(connectedWallet, host) {
     return;
   }
 
-  console.log("what the fuck");
   try {
     // docs suck, no idea how to automatically estimate fee
     const result = await connectedWallet.post({
