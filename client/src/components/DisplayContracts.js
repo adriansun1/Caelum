@@ -171,6 +171,7 @@ export default function DisplayContracts({ title, contract, owner }) {
                           )}
                         {!matcher &&
                           connectedWallet &&
+                          winner !== "Unmatched" &&
                           host === connectedWallet.walletAddress && (
                             <Chip label="Waiting for match" />
                           )}
